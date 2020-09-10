@@ -1,0 +1,67 @@
+{
+    "vision": {
+        
+        "plugins": {
+            "box": {
+                "face": {
+                    "import": "plugins.face.face",
+                    "method": "getFacesFromFrame",
+                    "enabled": true
+                }
+            },
+            "attr": {
+                "emotions": {
+                    "import": "plugins.emotions.emotions",
+                    "method": "getEmotionsFromFace",
+                    "enabled": true
+                }
+            }
+        },
+        "pipeline": [{
+            "op":       "box",
+            "level":    "frame",
+            "plugin":   "face"
+        },{
+            "op":       "attr",
+            "level":    "object",
+            "plugin":   "emotions",
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.5
+                },
+                "emotions_last_inference": {
+                    "$opt": true,
+                    "$older_than": 500
+                }
+            },
+            "condition": {
+                "emotion_probability": {
+                    "$gt": 0.6
+                }
+            }
+        }]
+    },
+    "render": {
+        "rules": [{
+            "display": {
+                "color": [71,160,67],
+                "label": "([number]) [label] - [emotion_label]",
+                "box":   true
+            },
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.5
+                },
+                "active": {
+                    "$eq": true
+                }
+            }
+        }]
+    }
+}
