@@ -1,0 +1,85 @@
+{
+    "vision": {
+        "plugins": {
+            "box": {
+                "face": {
+                    "import": "plugins.face.face",
+                    "method": "getFacesFromFrame",
+                    "enabled": true
+                }
+            },
+            "attr": {
+                "face_recognition": {
+                    "import": "plugins.face_recognition.face_recognition",
+                    "init":  "loadKnownIdentities",
+                    "method": "getIdentity",
+                    "enabled": true
+                }
+            }
+        },
+        "pipeline": [{
+            "op":       "box",
+            "level":    "frame",
+            "plugin":   "face"
+        },{
+            "op":       "attr",
+            "level":    "object",
+            "plugin":   "face_recognition",
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.5
+                },
+                "identity_inference_count": {
+                    "$opt": true,
+                    "$lt": 3
+                }
+            }
+        }]
+    },
+    "render": {
+        "rules": [{
+            "display": {
+                "color": [0,179,255],
+                "label": "([number]) [label] - [identity]",
+                "box":   true
+            },
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.3
+                },
+                "active": {
+                    "$eq": true
+                },
+                "identity": {
+                    "$exists": true
+                }
+            }
+        },{
+            "display": {
+                "color": [0,0,255],
+                "label": "([number]) [label] - Unknown Person",
+                "box":   true
+            },
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.3
+                },
+                "active": {
+                    "$eq": true
+                },
+                "identity": {
+                    "$exists": false
+                }
+            }
+        }]
+    }
+}

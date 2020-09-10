@@ -1,0 +1,108 @@
+{
+    "vision": {
+        "pipeline": [{
+            "op":       "box",
+            "level":    "frame",
+            "plugin":   "face",
+            "params": {
+                "square": true
+            }
+        },{
+            "op":       "attr",
+            "level":    "object",
+            "plugin":   "face_recognition",
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.9
+                },
+                "face_recognition_inference_count": {
+                    "$opt": true,
+                    "$lt": 5
+                }
+            }
+        },{
+            "op":       "attr",
+            "level":    "object",
+            "plugin":   "emotions",
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.8
+                },
+                "identity": {
+                    "$exists": true
+                }
+            }
+        }],
+        "plugins": {
+            "box": {
+                "face": {
+                    "import": "plugins.face.face",
+                    "method": "getFacesFromFrame",
+                    "enabled": true
+                }
+            },
+            "attr": {
+                "face_recognition": {
+                    "import": "plugins.face_recognition.face_recognition",
+                    "init":  "loadKnownIdentities",
+                    "method": "getIdentity",
+                    "enabled": true
+                },
+                "emotions": {
+                    "import": "plugins.emotions.emotions",
+                    "method": "getEmotionsFromFace",
+                    "enabled": true
+                }
+            }
+        }
+    },
+    "render": {
+        "rules": [{
+            "display": {
+                "color": [0,179,255],
+                "label": "([number]) [label] - [identity] ([emotion])",
+                "box":   true
+            },
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.3
+                },
+                "active": {
+                    "$eq": true
+                },
+                "identity": {
+                    "$exists": true
+                }
+            }
+        },{
+            "display": {
+                "color": [0,0,255],
+                "label": "([number]) [label] - Unknown Person",
+                "box":   true
+            },
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.3
+                },
+                "active": {
+                    "$eq": true
+                },
+                "identity": {
+                    "$exists": false
+                }
+            }
+        }]
+    }
+}
