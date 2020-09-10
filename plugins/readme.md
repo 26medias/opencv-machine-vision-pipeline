@@ -1,7 +1,5 @@
 # OpenCV Machine Vision Pipeline
 
-
-
 ## Plugins
 
 ### Objects recognition
