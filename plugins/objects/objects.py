@@ -17,7 +17,7 @@ cvNet = cv.dnn.readNetFromTensorflow(FROZEN_GRAPH, PB_TXT)
 cvNet.setPreferableBackend(cv.dnn.DNN_BACKEND_CUDA)
 cvNet.setPreferableTarget(cv.dnn.DNN_TARGET_CUDA_FP16)
 
-def getObjectsFromFrame(img):
+def getObjectsFromFrame(img, params):
     height = img.shape[0]
     width = img.shape[1]
     cvNet.setInput(cv.dnn.blobFromImage(img, 1.0/127.5, (SIZE, SIZE), (127.5, 127.5, 127.5), swapRB=True, crop=False))

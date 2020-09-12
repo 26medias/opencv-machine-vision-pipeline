@@ -1,5 +1,6 @@
 import uuid
 import math
+import time
 
 from tracker.lib.query import obj_query
 
@@ -23,10 +24,12 @@ class Tracker():
             object_id   = str(uuid.uuid4())
             self.objects[object_id]         = object_data
             self.objects[object_id]["type"] = object_type
+            self.objects[object_id]["created"]    = time.time()
             self.objects[object_id]["last_seen"]  = 0
             self.objects[object_id]["active"]     = True
-            self.objects[object_id]["number"]     = self.counter
+            self.objects[object_id]["obj_number"] = self.counter
             self.counter = self.counter + 1
+            self.framework.executeEvent("object.create", object_id)
         else:
             # Known object
             #print("[TRACKER] Known object!")
@@ -61,8 +64,37 @@ class Tracker():
             self.objects[object_id]["last_seen"] = self.objects[object_id]["last_seen"] + 1
             if self.objects[object_id]["last_seen"] > self.deactivateAfter:
                 self.objects[object_id]["active"]   = False
+                self.framework.executeEvent("object.deactivate", object_id)
             if self.objects[object_id]["last_seen"] > self.deleteAfter:
                 deletionList.append(object_id)
+                self.framework.executeEvent("object.delete", object_id)
         if len(deletionList)>0:
             [self.objects.pop(key) for key in deletionList] 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
