@@ -2,10 +2,10 @@ import cv2 as cv
 import json
 import time
 
-from vision.observer import Observer
-from render.renderer import Renderer
-from tracker.tracker import Tracker
-from tracker.lib.query import obj_query
+from vision_pipeline.vision.observer import Observer
+from vision_pipeline.render.renderer import Renderer
+from vision_pipeline.tracker.tracker import Tracker
+from vision_pipeline.tracker.lib.query import obj_query
 
 class VisionFramework():
     __version__ = "0.0.1"
@@ -47,13 +47,14 @@ class VisionFramework():
                 break
         cap.release()
         cv.destroyAllWindows()
-        
+    
+    # Register an event
     def on(self, event_name, event_fn, match=None):
         if event_name not in self.events:
             self.events[event_name] = []
         self.events[event_name].append((event_fn, match))
-        print('On', event_name)
     
+    # Propagate an event
     def executeEvent(self, event_name, event_data):
         if event_name in self.events:
             if event_name in ['object.create','object.deactivate','object.delete']:
@@ -73,3 +74,27 @@ class VisionFramework():
                     objects = obj_query(self.tracker.objects, match)
                     for obj in objects:
                         event_fn(self, obj)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

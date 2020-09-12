@@ -1,0 +1,67 @@
+{
+    "vision": {
+        "plugins": {
+            "box": {
+                "face": {
+                    "import": "plugins.face.face",
+                    "method": "getFacesFromFrame",
+                    "enabled": true
+                },
+                "objects": {
+                    "import": "plugins.objects.objects",
+                    "method": "getObjectsFromFrame",
+                    "enabled": true
+                }
+            }
+        },
+        "pipeline": [{
+            "op":       "box",
+            "level":    "frame",
+            "plugin":   "face",
+            "params": {
+                "square": true
+            }
+        },{
+            "op":       "box",
+            "level":    "frame",
+            "plugin":   "objects"
+        }]
+    },
+    "render": {
+        "rules": [{
+            "display": {
+                "color": [30,136,229],
+                "label": "([obj_number]) Face",
+                "box": true
+            },
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.5
+                },
+                "active": {
+                    "$eq": true
+                }
+            }
+        },{
+            "display": {
+                "color": [142,36,170],
+                "label": "([obj_number]) [label]",
+                "box": true
+            },
+            "match": {
+                "type": {
+                    "$eq": "objects"
+                },
+                "object_score": {
+                    "$gt": 0.5
+                },
+                "label": {
+                    "$eq": "person"
+                }
+            }
+        }]
+    }
+}
