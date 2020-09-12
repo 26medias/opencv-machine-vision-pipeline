@@ -4,40 +4,12 @@
             "op":       "box",
             "level":    "frame",
             "plugin":   "face"
-        },{
-            "op":       "attr",
-            "level":    "object",
-            "plugin":   "age",
-            "result": {
-                "type": "max",
-                "maxSize": 50,
-                "minSize": 50
-            },
-            "match": {
-                "type": {
-                    "$eq": "face"
-                },
-                "score": {
-                    "$gt": 0.95
-                },
-                "age_inference_count": {
-                    "$opt": true,
-                    "$lt": 50
-                }
-            }
         }],
         "plugins": {
             "box": {
                 "face": {
                     "import": "plugins.face.face",
                     "method": "getFacesFromFrame",
-                    "enabled": true
-                }
-            },
-            "attr": {
-                "age": {
-                    "import": "plugins.age.age",
-                    "method": "getAgeFromFace",
                     "enabled": true
                 }
             }
@@ -47,7 +19,7 @@
         "rules": [{
             "display": {
                 "color": [0,179,255],
-                "label": "([number]) [label] - Age Unknown",
+                "label": "([obj_number]) [score]",
                 "box":   true
             },
             "match": {
@@ -55,37 +27,10 @@
                     "$eq": "face"
                 },
                 "score": {
-                    "$gt": 0.7
+                    "$gt": 0.5
                 },
                 "active": {
                     "$eq": true
-                },
-                "age": {
-                    "$exists": false
-                },
-                "age_inference_count": {
-                    "$opt": true,
-                    "$lt": 200
-                }
-            }
-        },{
-            "display": {
-                "color": [76,175,80],
-                "label": "([number]) [label] - [age]",
-                "box":   false
-            },
-            "match": {
-                "type": {
-                    "$eq": "face"
-                },
-                "score": {
-                    "$gt": 0.7
-                },
-                "active": {
-                    "$eq": true
-                },
-                "age": {
-                    "$exists": true
                 }
             }
         }]
