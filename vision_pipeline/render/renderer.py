@@ -3,7 +3,7 @@ import numpy as np
 import time
 import re
 
-import render.utils
+import vision_pipeline.render.utils
 
 class Renderer():
     __version__ = "0.0.1"

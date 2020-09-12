@@ -2,7 +2,7 @@ import uuid
 import math
 import time
 
-from tracker.lib.query import obj_query
+from vision_pipeline.tracker.lib.query import obj_query
 
 class Tracker():
     __version__ = "0.0.1"
@@ -42,11 +42,12 @@ class Tracker():
     def getInstance(self, object_type, object_data):
         #print("[TRACKER] getInstance("+object_type+")", object_data)
         for object_id in self.objects.keys():
-            #print(">> [TRACKER] object_id", object_id, self.objects[object_id])
-            dist = self.getDistance(self.objects[object_id], object_data)
-            #print(">> [TRACKER] dist", dist)
-            if dist < self.dist_threshold:
-                return object_id
+            if self.objects[object_id]["type"] == object_type:
+                #print(">> [TRACKER] object_id", object_id, self.objects[object_id])
+                dist = self.getDistance(self.objects[object_id], object_data)
+                #print(">> [TRACKER] dist", dist)
+                if dist < self.dist_threshold:
+                    return object_id
         return None
     
     def query(self, query, debug=False):
@@ -62,7 +63,7 @@ class Tracker():
         deletionList = []
         for object_id in self.objects.keys():
             self.objects[object_id]["last_seen"] = self.objects[object_id]["last_seen"] + 1
-            if self.objects[object_id]["last_seen"] > self.deactivateAfter:
+            if self.objects[object_id]["last_seen"] > self.deactivateAfter and self.objects[object_id]["active"] == True:
                 self.objects[object_id]["active"]   = False
                 self.framework.executeEvent("object.deactivate", object_id)
             if self.objects[object_id]["last_seen"] > self.deleteAfter:

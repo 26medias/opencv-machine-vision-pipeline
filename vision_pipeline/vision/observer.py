@@ -1,6 +1,6 @@
 import importlib
 import time
-from tracker.lib.query import obj_query
+from vision_pipeline.tracker.lib.query import obj_query
 
 class Observer():
     __version__ = "0.0.1"
