@@ -23,6 +23,9 @@ def getGenderFromFace(face):
     cvNet.setInput(blob)
     detections  = cvNet.forward()
     gender      = gender_list[detections[0].argmax()]
+    score       = detections[0][detections[0].argmax()]
+    
     return {
-        "gender": gender
+        "gender": gender,
+        "gender_score": score
     }

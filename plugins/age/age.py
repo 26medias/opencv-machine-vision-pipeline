@@ -23,6 +23,9 @@ def getAgeFromFace(face):
     cvNet.setInput(blob)
     detections  = cvNet.forward()
     age         = age_list[detections[0].argmax()]
+    score       = detections[0][detections[0].argmax()]
+    
     return {
-        "age": age
+        "age": age,
+        "age_score": score
     }

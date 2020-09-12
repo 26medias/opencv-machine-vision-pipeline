@@ -1,0 +1,188 @@
+{
+    "vision": {
+        "plugins": {
+            "box": {
+                "face": {
+                    "import": "plugins.face.face",
+                    "method": "getFacesFromFrame",
+                    "enabled": true
+                },
+                "objects": {
+                    "import": "plugins.objects.objects",
+                    "method": "getObjectsFromFrame",
+                    "enabled": true
+                }
+            },
+            "attr": {
+                "gender": {
+                    "import": "plugins.gender.gender",
+                    "method": "getGenderFromFace",
+                    "enabled": true
+                },
+                "age": {
+                    "import": "plugins.age.age",
+                    "method": "getAgeFromFace",
+                    "enabled": true
+                }
+            }
+        },
+        "pipeline": [{
+            "op":       "box",
+            "level":    "frame",
+            "plugin":   "face",
+            "params": {
+                "square": true
+            }
+        },{
+            "op":       "box",
+            "level":    "frame",
+            "plugin":   "objects"
+        },{
+            "op":       "attr",
+            "level":    "object",
+            "plugin":   "gender",
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.5
+                },
+                "gender": {
+                    "$exists": false
+                }
+            },
+            "condition": {
+                "gender_score": {
+                    "$gt": 0.9
+                }
+            }
+        },{
+            "op":       "attr",
+            "level":    "object",
+            "plugin":   "age",
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.5
+                },
+                "age": {
+                    "$exists": false
+                }
+            },
+            "condition": {
+                "age_score": {
+                    "$gt": 0.9
+                }
+            }
+        }]
+    },
+    "render": {
+        "rules": [{
+            "display": {
+                "color": [30,136,229],
+                "label": "([obj_number]) [label] - Age & gender Unknown",
+                "box": true
+            },
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.5
+                },
+                "active": {
+                    "$eq": true
+                },
+                "age": {
+                    "$exists": false
+                },
+                "gender": {
+                    "$exists": false
+                }
+            }
+        },{
+            "display": {
+                "color": [0,151,167],
+                "label": "([obj_number]) [label] [age] - Gender Unknown",
+                "box": true
+            },
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.5
+                },
+                "active": {
+                    "$eq": true
+                },
+                "age": {
+                    "$exists": true
+                },
+                "gender": {
+                    "$exists": false
+                }
+            }
+        },{
+            "display": {
+                "color": [0,151,167],
+                "label": "([obj_number]) [label] [gender] - Age Unknown",
+                "box": true
+            },
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.5
+                },
+                "active": {
+                    "$eq": true
+                },
+                "age": {
+                    "$exists": false
+                },
+                "gender": {
+                    "$exists": true
+                }
+            }
+        },{
+            "display": {
+                "color": [76,175,80],
+                "label": "([obj_number]) [label] [gender] [age]",
+                "box": true
+            },
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.5
+                },
+                "active": {
+                    "$eq": true
+                },
+                "age": {
+                    "$exists": true
+                },
+                "gender": {
+                    "$exists": true
+                }
+            }
+        },{
+            "display": {
+                "color": [142,36,170],
+                "label": "([obj_number]) [label]",
+                "box": true
+            },
+            "match": {
+                "type": {
+                    "$eq": "objects"
+                }
+            }
+        }]
+    }
+}

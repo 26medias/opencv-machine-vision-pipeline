@@ -32,7 +32,7 @@ class Renderer():
             for obj_id in targets:
                 obj = self.framework.tracker.objects[obj_id]
                 if "box" in rule["display"] and rule["display"]["box"] is True:
-                    cv.rectangle(frame, (int(obj["x1"]), int(obj["y1"])), (int(obj["x2"]), int(obj["y2"])), rule["display"]["color"], thickness=1)
+                    cv.rectangle(frame, (int(obj["x1"]), int(obj["y1"])), (int(obj["x2"]), int(obj["y2"])), self.RGB2BGR(rule["display"]["color"]), thickness=2)
                 # If there's a label to show for that object type
                 if "label" in rule["display"]:
                     # Extract the variables to replace ("[varname]")
@@ -41,5 +41,7 @@ class Renderer():
                     for v in variables:
                         if v in obj:
                             label    = re.sub('\['+v+'\]', str(obj[v]), label)
-                    cv.putText(frame, label, (int(obj["x1"]), int(obj["y1"])-10), cv.FONT_HERSHEY_COMPLEX_SMALL, 0.5, rule["display"]["color"])
+                    cv.putText(frame, label, (int(obj["x1"]), int(obj["y1"])-10), cv.FONT_HERSHEY_COMPLEX_SMALL, 0.5, self.RGB2BGR(rule["display"]["color"]))
     
+    def RGB2BGR(self, color):
+        return (color[2],color[1],color[0])
