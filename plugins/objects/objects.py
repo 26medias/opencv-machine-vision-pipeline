@@ -31,8 +31,7 @@ def getObjectsFromFrame(img, params):
             right = detection[5] * width
             bottom = detection[6] * height
             faces.append({
-                "score": score,
-                "type":  LABEL_MAP[int(detection[1])],
+                "object_score": score,
                 "label": LABEL_MAP[int(detection[1])],
                 "x1":    round(left),
                 "y1":    round(top),

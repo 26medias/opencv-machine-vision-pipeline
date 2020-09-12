@@ -19,6 +19,9 @@ visionPipeline.on("object.create", onNewPerson, {
     },
     "label": {
         "$eq": "person"
+    },
+    "object_score": {
+        "$gt": 0.7
     }
 })
 visionPipeline.on("object.delete", onDeletePerson, {
@@ -27,6 +30,9 @@ visionPipeline.on("object.delete", onDeletePerson, {
     },
     "label": {
         "$eq": "person"
+    },
+    "object_score": {
+        "$gt": 0.7
     }
 })
 
