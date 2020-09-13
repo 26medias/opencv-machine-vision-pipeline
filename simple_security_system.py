@@ -20,7 +20,7 @@ def onFaceLost(framework, object_id):
     print("\nWe lost track of this face:\n", framework.tracker.objects[object_id])
 
 
-# Setup the pipeline on 
+# Setup the pipeline 
 visionPipeline = framework.VisionFramework(settings="settings/face_recognition.json")
 
 # Trigger an event when a new face is detected
