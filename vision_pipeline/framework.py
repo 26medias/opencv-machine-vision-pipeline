@@ -49,15 +49,17 @@ class VisionFramework():
         cv.destroyAllWindows()
     
     # Register an event
-    def on(self, event_name, event_fn, match=None):
+    def on(self, event_name, event_fn, match=None, attr=None):
         if event_name not in self.events:
             self.events[event_name] = []
         self.events[event_name].append((event_fn, match))
+        if attr is not None:
+            self.observer.attr_watchlist.append(attr)
     
     # Propagate an event
     def executeEvent(self, event_name, event_data):
         if event_name in self.events:
-            if event_name in ['object.create','object.deactivate','object.delete']:
+            if event_name in ['object.create','object.deactivate','object.delete','attribute.update']:
                 for event in self.events[event_name]:
                     event_fn, match = event
                     if match is None:
