@@ -8,8 +8,9 @@ class Tracker():
     __version__ = "0.0.1"
     def __init__(self, framework):
         print("Tracker:", self.__version__)
-        self.framework  = framework
-        self.objects    = {}
+        self.framework          = framework
+        self.objects            = {}
+        self.attr_watchlist     = []
         self.dist_threshold     = 50    # If the Euclidian distance is larger than this (pixels), consider it's a new object
         self.deactivateAfter    = 30    # Mark the object as disabled if not seen for 30 frames
         self.deleteAfter        = 60    # Delete the object if not seen for 60 frames
