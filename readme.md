@@ -180,5 +180,25 @@ Code & models originally from https://github.com/ageitgey/face_recognition
 Credits to Adam Geitgey
 
 
+## Examples
 
+### simple_face_detection.py
+
+A simple pipeline demonstrating how to detect faces.
+
+### simple_age_detection.py
+
+A simple pipeline demonstrating how to detect faces & infer their age.
+
+### simple_face_recognition.py
+
+A simple pipeline demonstrating how to detect face & detect their identity.
+
+Unknown faces will be saved for the future.
+
+See [https://github.com/26medias/opencv-machine-vision-pipeline#face-recognition](https://github.com/26medias/opencv-machine-vision-pipeline#face-recognition) for details on how to setup known faces.
+
+### simple_security_system.py
+
+In this example the pipeline will detect faces & their identity, triggering an event when a new face is detected, when a face is identified and when we lose track of a face. When a face is identified, we'll match the identity against a known user list and print an alert message "Intruder alert!" if the face is not in that list.
 
