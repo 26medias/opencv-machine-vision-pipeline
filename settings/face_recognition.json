@@ -43,7 +43,7 @@
         "rules": [{
             "display": {
                 "color": [0,179,255],
-                "label": "([number]) [label] - [identity]",
+                "label": "([obj_number]) [label] - [identity]",
                 "box":   true
             },
             "match": {
@@ -63,7 +63,7 @@
         },{
             "display": {
                 "color": [0,0,255],
-                "label": "([number]) [label] - Unknown Person",
+                "label": "([obj_number]) [label] - Unknown Person",
                 "box":   true
             },
             "match": {

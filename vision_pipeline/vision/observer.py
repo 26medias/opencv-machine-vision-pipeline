@@ -8,7 +8,8 @@ class Observer():
         print("Observer:", self.__version__)
         
         # Framework instance
-        self.framework  = framework
+        self.framework      = framework
+        self.attr_watchlist = []
         
         # Plugin instances
         self.plugins = {}
@@ -107,10 +108,20 @@ class Observer():
                 # Only apply the infered attributes if they match the condition
                 if _query_output is not None and "obj" in _query_output:
                     for k in attr_updates.keys():
+                        triggerUpdateEvent = False
+                        if k in self.attr_watchlist and ((k in self.framework.tracker.objects[obj_id] and self.framework.tracker.objects[obj_id][k] != attr_updates[k]) or k not in self.framework.tracker.objects[obj_id]):
+                            triggerUpdateEvent = True
                         self.framework.tracker.objects[obj_id][k]   = attr_updates[k]
+                        if triggerUpdateEvent == True:
+                            self.framework.executeEvent("attribute.update", obj_id)
             else:
                 for k in attr_updates.keys():
+                    triggerUpdateEvent = False
+                    if k in self.attr_watchlist and ((k in self.framework.tracker.objects[obj_id] and self.framework.tracker.objects[obj_id][k] != attr_updates[k]) or k not in self.framework.tracker.objects[obj_id]):
+                        triggerUpdateEvent = True
                     self.framework.tracker.objects[obj_id][k]   = attr_updates[k]
+                    if triggerUpdateEvent == True:
+                        self.framework.executeEvent("attribute.update", obj_id)
     
     
     # Get the attribute value based on an array of previous inferences, based on a pooling rule
