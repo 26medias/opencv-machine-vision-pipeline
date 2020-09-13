@@ -6,6 +6,11 @@ __pycache__/
 # C extensions
 *.so
 
+# Large models
+yolov3.cfg
+yolov3.weights
+
+
 # Distribution / packaging
 .Python
 build/

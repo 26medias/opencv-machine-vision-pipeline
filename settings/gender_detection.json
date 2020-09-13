@@ -1,0 +1,89 @@
+{
+    "vision": {
+        "plugins": {
+            "box": {
+                "face": {
+                    "import": "plugins.face.face",
+                    "method": "getFacesFromFrame",
+                    "enabled": true
+                }
+            },
+            "attr": {
+                "gender": {
+                    "import": "plugins.gender.gender",
+                    "method": "getGenderFromFace",
+                    "enabled": true
+                }
+            }
+        },
+        "pipeline": [{
+            "op":       "box",
+            "level":    "frame",
+            "plugin":   "face"
+        },{
+            "op":       "attr",
+            "level":    "object",
+            "plugin":   "gender",
+            "result": {
+                "type": "max",
+                "maxSize": 50,
+                "minSize": 50
+            },
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.9
+                },
+                "gender_inference_count": {
+                    "$opt": true,
+                    "$lt": 50
+                }
+            }
+        }]
+    },
+    "render": {
+        "rules": [{
+            "display": {
+                "color": [0,179,255],
+                "label": "([obj_number]) Gender Unknown",
+                "box":   true
+            },
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.7
+                },
+                "active": {
+                    "$eq": true
+                },
+                "gender": {
+                    "$exists": false
+                }
+            }
+        },{
+            "display": {
+                "color": [76,175,80],
+                "label": "([obj_number]) Gender: [gender] (certainty: [gender_score])",
+                "box":   true
+            },
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.7
+                },
+                "active": {
+                    "$eq": true
+                },
+                "gender": {
+                    "$exists": true
+                }
+            }
+        }]
+    }
+}

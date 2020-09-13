@@ -1,0 +1,41 @@
+{
+    "vision": {
+        "plugins": {
+            "box": {
+                "objects": {
+                    "import": "plugins.yolov3.objects",
+                    "method": "getObjectsFromFrame",
+                    "enabled": true
+                }
+            }
+        },
+        "pipeline": [{
+            "op":       "box",
+            "level":    "frame",
+            "plugin":   "objects"
+        }]
+    },
+    "render": {
+        "rules": [{
+            "display": {
+                "color": [30,136,229],
+                "label": "([obj_number]) [label] [object_score]",
+                "box": true
+            },
+            "match": {
+                "type": {
+                    "$eq": "objects"
+                },
+                "label": {
+                    "$eq": "car"
+                },
+                "object_score": {
+                    "$gt": 0.3
+                },
+                "active": {
+                    "$eq": true
+                }
+            }
+        }]
+    }
+}

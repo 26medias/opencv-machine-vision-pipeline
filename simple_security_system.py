@@ -6,7 +6,6 @@ def onNewFace(framework, object_id):
 
 # Event handler: When a face is identified
 def onFaceIdentified(framework, object_id):
-    print("onFaceIdentified", framework.tracker.objects[object_id])
     identity = framework.tracker.objects[object_id]["identity"]
     print("\nFace identified: ", identity)
     if identity in ["Julien", "Noah", "Camila"]:
@@ -26,10 +25,10 @@ visionPipeline = framework.VisionFramework(settings="settings/face_recognition.j
 # Trigger an event when a new face is detected
 visionPipeline.on("object.create", onNewFace, {
     "type": {
-        "$eq": "face"
+        "$eq": "face"   # The object should be a face
     },
     "score": {
-        "$gt": 0.3
+        "$gt": 0.3  # Minimum certainty of 30% that it is a face that is detected
     }
 })
 
@@ -38,7 +37,7 @@ visionPipeline.on("attribute.update", onFaceIdentified, {
     "type": {
         "$eq": "face"
     }
-}, attr="identity")
+}, attr="identity") # Attach the event to the "identity" attribute
 
 # Trigger an event when we lose track of a face
 visionPipeline.on("object.deactivate", onFaceLost, {
