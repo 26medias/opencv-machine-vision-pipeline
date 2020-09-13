@@ -18,8 +18,8 @@
     "render": {
         "rules": [{
             "display": {
-                "color": [142,36,170],
-                "label": "([obj_number]) [label] ([object_score])",
+                "color": [30,136,229],
+                "label": "([obj_number]) [label] [object_score]",
                 "box": true
             },
             "match": {
@@ -27,7 +27,10 @@
                     "$eq": "objects"
                 },
                 "object_score": {
-                    "$gt": 0.7
+                    "$gt": 0.3
+                },
+                "active": {
+                    "$eq": true
                 }
             }
         }]
