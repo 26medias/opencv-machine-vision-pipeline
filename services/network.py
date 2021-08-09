@@ -193,8 +193,107 @@ class Scanner:
         print("Done");
 
 scanner = Scanner()
-scanner.scan()
-print("End");
+#scanner.scan()
+
+
+
+
+
+test = "threads"
+
+if test=="queue":
+    import queue
+    from urllib.request import urlopen
+    # Load up a queue with your data. This will handle locking
+    q = queue.Queue()
+    for subnet in range(95,110):
+        q.put(subnet)
+    
+    # Define a worker function
+    def worker(url_queue):
+        queue_full = True
+        while queue_full:
+            try:
+                # Get your data off the queue, and do some work
+                subnet = url_queue.get(False)
+                ip = "192.168.0."+str(subnet)
+                endpoint = "http://"+ip+"/info"
+                try:
+                    data = urlopen(endpoint).read()
+                    print(endpoint, data.getcode(), data)
+                except:
+                    print(endpoint, "Fail")
+                    pass
+                
+    
+            except queue.Empty:
+                queue_full = False
+    
+    # Create as many threads as you want
+    thread_count = 5
+    threads = []
+    for i in range(thread_count):
+        t = threading.Thread(target=worker, args = (q,))
+        t.start()
+        threads.append(t)
+    
+    for t in threads:
+        t.join()
+
+if test=="sync":
+    for subnet in range(95,105):
+        ip = "192.168.0."+str(subnet)
+        endpoint = "http://"+ip+"/info"
+        try:
+            data = urlopen(endpoint).read()
+            print(endpoint, data)
+            pass
+        except:
+            print(endpoint, "Fail")
+            pass
+
+if test=="threads":
+    from urllib.request import *
+    from socket import timeout
+    import requests
+    import socket
+    socket.setdefaulttimeout(100)
+    
+    output = {}
+    urls = ["http://192.168.0."+str(x)+"/info" for x in range(95,105)] # if x is not 101
+    print(urls)
+    def download_index(url, lock):
+        print("Trying ", url)
+        text = 'Fail'
+        try:
+            response = urlopen(Request(url), timeout=100)
+            #response = requests.get(url, timeout=20)
+            text = response.json()
+            print(url, "Found", text)
+        except socket.timeout:
+            print(url, "timeout")
+        except:
+            print(url, "failed")
+        #indexing
+        with lock:
+            #access shared resources
+            output[url] = text
+    
+    n = 5 #number of parallel connections
+    chunks = [urls[i * n:(i + 1) * n] for i in range((len(urls) + n - 1) // n )]
+    
+    lock = threading.Lock()
+    
+    for chunk in chunks:
+        threads = []
+        for url in chunk:
+            thread = threading.Thread(target=download_index, args=(url, lock,))
+            thread.start()
+            threads.append(thread)
+        for thread in threads:
+            thread.join()
+    
+    print("End")
 
 #try:
 #    response = requests.get("http://192.168.0.105/info").json()
