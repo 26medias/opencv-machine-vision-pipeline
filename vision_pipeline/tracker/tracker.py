@@ -35,6 +35,9 @@ class Tracker():
             # Known object
             #print("[TRACKER] Known object!")
             self.objects[object_id]["last_seen"]  = 0
+            if self.objects[object_id]["active"]==False:
+                # Reactivating
+                self.framework.executeEvent("object.reactivate", object_id)
             self.objects[object_id]["active"]     = True
             # Update the object data
             for k in object_data.keys():
