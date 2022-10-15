@@ -1,6 +1,7 @@
 import importlib
 import time
 from vision_pipeline.tracker.lib.query import obj_query
+import cv2
 
 class Observer():
     __version__ = "0.0.1"
@@ -34,13 +35,16 @@ class Observer():
     def see(self, frame):
         # Save the frame
         self.framework.renderer.setFrame(frame)
-        self.runPipeline(frame)
+        frame = self.runPipeline(frame)
+        self.framework.renderer.setFrame(frame)
+        return frame
         
     
     # Execute every pipleline item on a frame
     def runPipeline(self, frame):
         # Run the pipelines in order
         for item in self.framework.settings["vision"]["pipeline"]:
+            # Object Detection / Box object creation/update
             if item["op"] == "box":
                 # Object detection
                 if item["level"] == "frame":
@@ -51,10 +55,25 @@ class Observer():
                     objects = self.plugins[item["plugin"]]["fn"](frame, params)
                     for obj in objects:
                         self.framework.tracker.registerObject(self.plugins[item["plugin"]]["name"], obj)
+            
+            # Frame Resize
+            elif item["op"] == "resize":
+                frame = cv2.resize(frame, (item['w'], item['h']), interpolation=cv2.INTER_AREA)
+            
+            # Frame Redraw
+            elif item["op"] == "redraw":
+                if "params" in item:
+                    params = item["params"]
+                else:
+                    params = None
+                frame = self.plugins[item["plugin"]]["fn"](frame, params)
+            
+            # Attribute Inference
             elif item["op"] == "attr":
                 # Attribute inference
                 if item["level"] == "object":
                     self.inferAttributes(frame, item)
+        return frame
     
     
     

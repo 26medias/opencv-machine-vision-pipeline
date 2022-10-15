@@ -24,7 +24,7 @@ class VisionFramework():
     # Start capturing
     def capture(self, src=0, fps=30):
         cap = cv.VideoCapture(src)
-        cap.set(cv.CAP_PROP_FPS, fps);
+        cap.set(cv.CAP_PROP_FPS, fps)
         
         prevTime = time.time()
         while cap.isOpened():
@@ -37,7 +37,7 @@ class VisionFramework():
             self.tracker.forward()
             
             # Show the observer what the camera sees
-            self.observer.see(frame)
+            frame = self.observer.see(frame)
             
             # Render
             output = self.renderer.render(prevTime) # prevTime passed to calculate & display the FPS

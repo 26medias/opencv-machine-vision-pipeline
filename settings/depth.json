@@ -1,0 +1,56 @@
+{
+    "vision": {
+        "pipeline": [{
+            "op":       "resize",
+            "w":        640,
+            "h":        480
+        },{
+            "op":       "box",
+            "level":    "frame",
+            "plugin":   "face"
+        },{
+            "op":       "redraw",
+            "plugin":   "depth"
+        },{
+            "op":       "resize",
+            "w":        640,
+            "h":        480
+        }],
+        "plugins": {
+            "box": {
+                "face": {
+                    "import": "plugins.face.face",
+                    "method": "getFacesFromFrame",
+                    "enabled": true
+                }
+            },
+            "redraw": {
+                "depth": {
+                    "import": "plugins.depth.depth",
+                    "method": "getDepth",
+                    "enabled": true
+                }
+            }
+        }
+    },
+    "render": {
+        "rules": [{
+            "display": {
+                "color": [0,179,255],
+                "label": "([obj_number]) [score]",
+                "box":   true
+            },
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.5
+                },
+                "active": {
+                    "$eq": true
+                }
+            }
+        }]
+    }
+}

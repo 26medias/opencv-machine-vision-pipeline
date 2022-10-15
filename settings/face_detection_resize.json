@@ -1,0 +1,42 @@
+{
+    "vision": {
+        "pipeline": [{
+            "op":       "resize",
+            "w":        320,
+            "h":        240
+        },{
+            "op":       "box",
+            "level":    "frame",
+            "plugin":   "face"
+        }],
+        "plugins": {
+            "box": {
+                "face": {
+                    "import": "plugins.face.face",
+                    "method": "getFacesFromFrame",
+                    "enabled": true
+                }
+            }
+        }
+    },
+    "render": {
+        "rules": [{
+            "display": {
+                "color": [0,179,255],
+                "label": "([obj_number]) [score]",
+                "box":   true
+            },
+            "match": {
+                "type": {
+                    "$eq": "face"
+                },
+                "score": {
+                    "$gt": 0.5
+                },
+                "active": {
+                    "$eq": true
+                }
+            }
+        }]
+    }
+}
